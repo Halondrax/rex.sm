@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>BOT CRASH</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  
+  <style>
+    .card {
+      background: rgba(0, 0, 0, 0.596);
+      border-radius: 10px;
+      padding: 10ex;
+      text-indent: px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      font-size: 50px;
+      color: rgb(0, 9, 34);
+      text-shadow: 0 0 5px rgb(17, 0, 255), 1px 2px 2px rgb(17, 0, 253);
+    }
+
+    button {
+      padding: 15px 20px;
+      background-color: #0004fc75;
+      color: #9b7c7c;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #prediction {
+      font-size: 90px;
+      color: #41cc0a;
+      margin-top: -260%;
+    }
+
+    footer {
+     position: fixed;
+      left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.884);
+      text-align: center;
+      border-top: 2px solid rgba(51, 54, 56, 0);
+      font-size: 15px;
+    }
+  </style>
+</head>
+
+<div class="loader">
+  <svg height="0" width="0" viewBox="0 0 64 64" class="absolute">
+    <defs class="s-xJBuHA073rTt" xmlns="http://www.w3.org/2000/svg">
+      <linearGradient class="s-xJBuHA073rTt" gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="b">
+        <stop class="s-xJBuHA073rTt" stop-color="#973BED"></stop>
+        <stop class="s-xJBuHA073rTt" stop-color="#007CFF" offset="1"></stop>
+      </linearGradient>
+      <linearGradient class="s-xJBuHA073rTt" gradientUnits="userSpaceOnUse" y2="0" x2="0" y1="64" x1="0" id="c">
+        <stop class="s-xJBuHA073rTt" stop-color="#FFC800"></stop>
+        <stop class="s-xJBuHA073rTt" stop-color="#F0F" offset="1"></stop>
+        <animateTransform repeatCount="indefinite" keySplines=".42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1" keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1" dur="8s" values="0 32 32;-270 32 32;-270 32 32;-540 32 32;-540 32 32;-810 32 32;-810 32 32;-1080 32 32;-1080 32 32" type="rotate" attributeName="gradientTransform"></animateTransform>
+      </linearGradient>
+      <linearGradient class="s-xJBuHA073rTt" gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="d">
+        <stop class="s-xJBuHA073rTt" stop-color="#00E0ED"></stop>
+        <stop class="s-xJBuHA073rTt" stop-color="#00DA72" offset="1"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" height="64" width="64" class="inline-block">
+    <path stroke-linejoin="round" stroke-linecap="round" stroke-width="8" stroke="url(#b)" d="M 54.722656,3.9726563 A 2.0002,2.0002 0 0 0 54.941406,4 h 5.007813 C 58.955121,17.046124 49.099667,27.677057 36.121094,29.580078 a 2.0002,2.0002 0 0 0 -1.708985,1.978516 V 60 H 29.587891 V 31.558594 A 2.0002,2.0002 0 0 0 27.878906,29.580078 C 14.900333,27.677057 5.0448787,17.046124 4.0507812,4 H 9.28125 c 1.231666,11.63657 10.984383,20.554048 22.6875,20.734375 a 2.0002,2.0002 0 0 0 0.02344,0 c 11.806958,0.04283 21.70649,-9.003371 22.730469,-20.7617187 z" class="dash" id="y" pathLength="360"></path>
+  </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" style="--rotation-duration:0ms; --rotation-direction:normal;" viewBox="0 0 64 64" height="64" width="64" class="inline-block">
+    <path stroke-linejoin="round" stroke-linecap="round" stroke-width="10" stroke="url(#c)" d="M 32 32
+        m 0 -27
+        a 27 27 0 1 1 0 54
+        a 27 27 0 1 1 0 -54" class="spin" id="o" pathLength="360"></path>
+      </svg>
+      <div class="w-2"></div>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" style="--rotation-duration:0ms; --rotation-direction:normal;" viewBox="0 0 64 64" height="64" width="64" class="inline-block">
+        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="8" stroke="url(#d)" d="M 4,4 h 4.6230469 v 25.919922 c -0.00276,11.916203 9.8364941,21.550422 21.7500001,21.296875 11.616666,-0.240651 21.014356,-9.63894 21.253906,-21.25586 a 2.0002,2.0002 0 0 0 0,-0.04102 V 4 H 56.25 v 25.919922 c 0,14.33873 -11.581192,25.919922 -25.919922,25.919922 a 2.0002,2.0002 0 0 0 -0.0293,0 C 15.812309,56.052941 3.998433,44.409961 4,29.919922 Z" class="dash" id="u" pathLength="360"></path>
+      </svg>
+    </div>
+  
+    <div class="card">
+      <h1>☆BOT CRASH☆</h1> 
+      <button class="game-button">
+ 
+          <span class="rainbow-text">Start Game</span>
+        </button>
+
+        <div class="container">
+        <div id="prediction"></div>
+
+      </div>
+      
+      <div class="glitch" data-text="☆JOKER☆ ">☆JOKER☆ </div>
+
+    </div>
+  </div>
+
+
+ <script>
+    const connectionID = "1032886655";
+    const ws = new WebSocket('wss://megapari.com/games-frame/sockets/crash?whence=114&fcountry=66&ref=192&gr=825&appGuid=00000000-0000-0000-0000-000000000000&lng=en');
+
+    let previousValues = [];
+    let collectedData = []; 
+
+    ws.onopen = function() {
+        console.log('WebSocket opened');
+        ws.send('{"protocol":"json","version":1}\x1e');
+        ws.send('{"arguments":[{"activity":30,"currency":361}],"invocationId":"1032886655","target":"Guest","type":1}\x1e');
+    };
+
+    ws.onmessage = function(event) {
+        const data = JSON.parse(event.data.slice(0, -1));
+        if (data.target === 'OnCrash') {
+            const currentValue = data.arguments[0].f;
+
+            previousValues.push(currentValue);
+
+            const predictedValue = getNextPrediction();
+
+            savePrediction(currentValue, predictedValue); // حفظ التوقع
+            updateUI(currentValue, predictedValue);
+        }
+    };
+
+    ws.onclose = function() {
+        console.log('WebSocket closed');
+    };
+
+    function getNextPrediction() {
+        if (previousValues.length < 2) {
+            return 1.00;
+        }
+        
+        const sum = previousValues.slice(-3).reduce((acc, val) => acc + val, 0);
+        const average = sum / 3;
+        return average;
+    }
+
+    function savePrediction(currentValue, predictedValue) {
+        const predictionData = {
+            time: new Date().toLocaleString(),
+            currentValue: currentValue,
+            predictedValue: predictedValue.toFixed(2)
+        };
+        collectedData.push(predictionData); // تخزين البيانات في مصفوفة collectedData
+        console.log('Saved Prediction:', predictionData); // عرض التوقعات المحفوظة في وحدة التحكم
+    }
+
+    function updateUI(currentValue, predictedValue) {
+        document.getElementById('prediction').innerHTML = `
+            <p>  ${currentValue}</p>
+            <p>  ${predictedValue.toFixed(2)}</p>`;
+    }
+</script>
+
+
+
+
+
+</body>
+
+<footer>
+  <marquee scrollamount="10" width="100%">
+    <font color="white"> 
+      JOKER HACKER☆______☆ MEGAPARI ☆______☆ALGERIAN☆______☆JOKER HACKER☆______☆ MEGAPARI ☆______☆ALGERIAN☆______JOKER HACKER☆______☆ MEGAPARI ☆______☆ ALGERIAN ☆______☆ JOKER HACKER ☆______☆ MEGAPARI ☆______☆ ALGERIAN ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆  ☆ ALGERIAN_MEGAPARI.COM 
+    </font>
+  </marquee>
+</footer>
+
+</html>
+
+
+<div class="level-up-notification">
+  <div class="confetti"></div>
+</div>
+    
+    <div class="confetti-container">
+      <div class="confetti">
+        <i class="square" style="--speed: 10; --bg: yellow"></i>
+        <i class="pentagram" style="--speed: 18; --bg: white"></i>
+        <i class="rectangle" style="--speed: 29; --bg: green"></i>
+        <i class="hexagram" style="--speed: 17; --bg: blue"></i>
+        <i class="pentagram" style="--speed: 33; --bg: red"></i>
+        <i class="dodecagram" style="--speed: 26; --bg: yellow"></i>
+        <i class="square" style="--speed: 40; --bg: white"></i>
+        <i class="rectangle" style="--speed: 17; --bg: green"></i>
+        <i class="square" style="--speed: 25; --bg: white"></i>
+        <i class="rectangle" style="--speed: 18; --bg: green"></i>
+        <i class="pentagram" style="--speed: 32; --bg: yellow"></i>
+        <i class="square" style="--speed: 25; --bg: white"></i>
+        <i class="rectangle" style="--speed: 18; --bg: green"></i>
+        <i class="dodecagram" style="--speed: 37; --bg: yellow"></i>
+        <i class="dodecagram" style="--speed: 37; --bg: red"></i>
+        <i class="hexagram" style="--speed: 36; --bg: white"></i>
+        <i class="pentagram" style="--speed: 32; --bg: yellow"></i>
+        <i class="square" style="--speed: 29; --bg: white"></i>
+        <i class="rectangle" style="--speed: 18; --bg: green"></i>
+        <i class="dodecagram" style="--speed: 37; --bg: red"></i>
+        <i class="rectangle" style="--speed: 30; --bg: pink"></i>
+        <i class="square" style="--speed: 30; --bg: red"></i>
+        <i class="pentagram" style="--speed: 18; --bg: red"></i>
+        <i class="rectangle" style="--speed: 19; --bg: green"></i>
+        <i class="hexagram" style="--speed: 16; --bg: blue"></i>
+        <i class="pentagram" style="--speed: 23; --bg: red"></i>
+        <i class="dodecagram" style="--speed: 34; --bg: yellow"></i>
+        <i class="square" style="--speed: 40; --bg: purple"></i>
+        <i class="rectangle" style="--speed: 21; --bg: green"></i>
+        <i class="square" style="--speed: 14; --bg: white"></i>
+        <i class="rectangle" style="--speed: 38; --bg: green"></i>
+        <i class="dodecagram" style="--speed: 19; --bg: red"></i>
+        <i class="hexagram" style="--speed: 21; --bg: white"></i>
+        <i class="pentagram" style="--speed: 32; --bg: yellow"></i>
+        <i class="square" style="--speed: 23; --bg: white"></i>
+        <i class="rectangle" style="--speed: 18; --bg: green"></i>
+        <i class="dodecagram" style="--speed: 37; --bg: red"></i>
+        <i class="rectangle" style="--speed: 38; --bg: pink"></i>
+        <i class="pentagram" style="--speed: 13; --bg: red"></i>
+        <i class="dodecagram" style="--speed: 49; --bg: yellow"></i>
+        <i class="square" style="--speed: 15; --bg: steelblue"></i>
+        <i class="square" style="--speed: 10; --bg: yellow"></i>
+        <i class="pentagram" style="--speed: 18; --bg: white"></i>
+        <i class="rectangle" style="--speed: 29; --bg: green"></i>
+        <i class="hexagram" style="--speed: 17; --bg: blue"></i>
+        <i class="pentagram" style="--speed: 33; --bg: red"></i>
+        <i class="dodecagram" style="--speed: 26; --bg: yellow"></i>
+        <i class="square" style="--speed: 40; --bg: purple"></i>
+        <i class="rectangle" style="--speed: 17; --bg: green"></i>
+        <i class="square" style="--speed: 25; --bg: white"></i>
+        <i class="rectangle" style="--speed: 18; --bg: green"></i>
+        <i class="pentagram" style="--speed: 32; --bg: yellow"></i>
+        <i class="square" style="--speed: 45; --bg: white"></i>
+        <i class="rectangle" style="--speed: 18; --bg: green"></i>
+        <i class="dodecagram" style="--speed: 37; --bg: red"></i>
+        <i class="dodecagram" style="--speed: 37; --bg: red"></i>
+        <i class="hexagram" style="--speed: 26; --bg: white"></i>
+        <i class="pentagram" style="--speed: 32; --bg: yellow"></i>
+        <i class="square" style="--speed: 45; --bg: white"></i>
+        <i class="rectangle" style="--speed: 18; --bg: green"></i>
+        <i class="dodecagram" style="--speed: 37; --bg: red"></i>
+        <i class="rectangle" style="--speed: 50; --bg: pink"></i>
+        <i class="square" style="--speed: 30; --bg: red"></i>
+        <i class="pentagram" style="--speed: 18; --bg: red"></i>
+        <i class="rectangle" style="--speed: 19; --bg: green"></i>
+        <i class="hexagram" style="--speed: 16; --bg: blue"></i>
+        <i class="pentagram" style="--speed: 23; --bg: red"></i>
+        <i class="dodecagram" style="--speed: 33; --bg: yellow"></i>
+        <i class="square" style="--speed: 40; --bg: orange"></i>
+        <i class="rectangle" style="--speed: 21; --bg: green"></i>
+        <i class="square" style="--speed: 14; --bg: white"></i>
+        <i class="rectangle" style="--speed: 38; --bg: green"></i>
+        <i class="dodecagram" style="--speed: 19; --bg: red"></i>
+        <i class="hexagram" style="--speed: 34; --bg: white"></i>
+        <i class="pentagram" style="--speed: 32; --bg: yellow"></i>
+        <i class="square" style="--speed: 23; --bg: white"></i>
+        <i class="rectangle" style="--speed: 18; --bg: green"></i>
+        <i class="dodecagram" style="--speed: 37; --bg: red"></i>
+        <i class="rectangle" style="--speed: 38; --bg: pink"></i>
+        <i class="pentagram" style="--speed: 13; --bg: red"></i>
+        <i class="dodecagram" style="--speed: 49; --bg: yellow"></i>
+        <i class="square" style="--speed: 15; --bg: cyan"></i>
+      </div>
+    </div>
+
+    <div class="loader">
+      <svg height="0" width="0" viewBox="0 0 64 64" class="absolute">
+        <defs class="s-xJBuHA073rTt" xmlns="http://www.w3.org/2000/svg">
+          <linearGradient class="s-xJBuHA073rTt" gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="b">
+            <stop class="s-xJBuHA073rTt" stop-color="#973BED"></stop>
+            <stop class="s-xJBuHA073rTt" stop-color="#007CFF" offset="1"></stop>
+          </linearGradient>
+          <linearGradient class="s-xJBuHA073rTt" gradientUnits="userSpaceOnUse" y2="0" x2="0" y1="64" x1="0" id="c">
+            <stop class="s-xJBuHA073rTt" stop-color="#FFC800"></stop>
+            <stop class="s-xJBuHA073rTt" stop-color="#F0F" offset="1"></stop>
+            <animateTransform repeatCount="indefinite" keySplines=".42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1" keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1" dur="8s" values="0 32 32;-270 32 32;-270 32 32;-540 32 32;-540 32 32;-810 32 32;-810 32 32;-1080 32 32;-1080 32 32" type="rotate" attributeName="gradientTransform"></animateTransform>
+          </linearGradient>
+          <linearGradient class="s-xJBuHA073rTt" gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="d">
+            <stop class="s-xJBuHA073rTt" stop-color="#00E0ED"></stop>
+            <stop class="s-xJBuHA073rTt" stop-color="#00DA72" offset="1"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" height="64" width="64" class="inline-block">
+        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="8" stroke="url(#b)" d="M 54.722656,3.9726563 A 2.0002,2.0002 0 0 0 54.941406,4 h 5.007813 C 58.955121,17.046124 49.099667,27.677057 36.121094,29.580078 a 2.0002,2.0002 0 0 0 -1.708985,1.978516 V 60 H 29.587891 V 31.558594 A 2.0002,2.0002 0 0 0 27.878906,29.580078 C 14.900333,27.677057 5.0448787,17.046124 4.0507812,4 H 9.28125 c 1.231666,11.63657 10.984383,20.554048 22.6875,20.734375 a 2.0002,2.0002 0 0 0 0.02344,0 c 11.806958,0.04283 21.70649,-9.003371 22.730469,-20.7617187 z" class="dash" id="y" pathLength="360"></path>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" style="--rotation-duration:0ms; --rotation-direction:normal;" viewBox="0 0 64 64" height="64" width="64" class="inline-block">
+        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="10" stroke="url(#c)" d="M 32 32
+            m 0 -27
+            a 27 27 0 1 1 0 54
+            a 27 27 0 1 1 0 -54" class="spin" id="o" pathLength="360"></path>
+      </svg>
+      <div class="w-2"></div>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" style="--rotation-duration:0ms; --rotation-direction:normal;" viewBox="0 0 64 64" height="64" width="64" class="inline-block">
+        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="8" stroke="url(#d)" d="M 4,4 h 4.6230469 v 25.919922 c -0.00276,11.916203 9.8364941,21.550422 21.7500001,21.296875 11.616666,-0.240651 21.014356,-9.63894 21.253906,-21.25586 a 2.0002,2.0002 0 0 0 0,-0.04102 V 4 H 56.25 v 25.919922 c 0,14.33873 -11.581192,25.919922 -25.919922,25.919922 a 2.0002,2.0002 0 0 0 -0.0293,0 C 15.812309,56.052941 3.998433,44.409961 4,29.919922 Z" class="dash" id="u" pathLength="360"></path>
+      </svg>
+    </div>
+	
+	
+	</html>
+</script>
+<script type="text/javascript">
+    var rev = "fwd";
+    function titlebar(val)
+    {
+      var msg  = "MEGA_PARI_CRASH";
+      var res = " ";
+      var speed = 50
+      var pos = val;
+    
+      msg = " "+msg+" ";
+      var le = msg.length;
+      if(rev == "fwd"){
+        if(pos < le){
+        pos = pos+1;
+        scroll = msg.substr(0,pos);
+        document.title = scroll;
+        timer = window.setTimeout("titlebar("+pos+")",speed);
+        }
+        else{
+        rev = "bwd";
+        timer = window.setTimeout("titlebar("+pos+")",speed);
+        }
+      }
+      else{
+        if(pos > 0){
+        pos = pos-1;
+        var ale = le-pos;
+        scrol = msg.substr(ale,le);
+        document.title = scrol;
+        timer = window.setTimeout("titlebar("+pos+")",speed);
+        }
+        else{
+        rev = "fwd";
+        timer = window.setTimeout("titlebar("+pos+")",speed);
+        } 
+      }
+    }
+    
+
+    titlebar(0);
+
+
+
+
+
+</script>
+
+
+
+
+
